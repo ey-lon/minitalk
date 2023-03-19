@@ -16,7 +16,7 @@ static void	ft_put_uns(unsigned int n)
 {
 	if (n >= 10)
 	{
-		ft_print_uns(n / 10);
+		ft_put_uns(n / 10);
 		n = n % 10;
 	}
 	n = n + '0';
