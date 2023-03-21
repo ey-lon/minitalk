@@ -1,12 +1,17 @@
 # minitalk
 The purpose of this project is to code a small data exchange program using UNIX signals.
-## Usage
-``make`` to compile std. version.
-
-``make bonus`` to compile bonus version.
 
 ## Bonus
 The server acknowledges every message received by sending back a signal to the
 client.
 
 Unicode characters support!
+
+## Usage
+``make`` to compile std. version.
+
+``make bonus`` to compile bonus version.
+
+``./server`` to execute the server
+
+``./client <server_pid> <message>`` to execute the client and send a message to the server
