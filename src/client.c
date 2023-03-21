@@ -13,18 +13,14 @@
 #include <unistd.h>
 #include <signal.h>
 #include <sys/types.h>
-#include "Libft/libft.h"
+#include "../Libft/libft.h"
 
 int	g_check = 0;
 
 static void	ft_msgstat(int signal)
 {
 	g_check = 0;
-	if (signal == SIGUSR1)
-	{
-		write(1, "Message Sent!\n", 14);
-		exit(0);
-	}
+	(void)signal;
 }
 
 static void	ft_conv(char c, int pid)

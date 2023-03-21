@@ -13,7 +13,7 @@
 #include <unistd.h>
 #include <signal.h>
 #include <sys/types.h>
-#include "Libft/libft.h"
+#include "../Libft/libft.h"
 
 static char	*ft_free_join(char *old_msg, char *new_char)
 {
@@ -41,6 +41,7 @@ static void	ft_sighandler(int signal, siginfo_t *info, void *context)
 			full_msg = ft_free_join(full_msg, &msg);
 		else if (msg == '\0')
 		{
+			kill(info->si_pid, SIGUSR1);
 			printf("%s\n", full_msg);
 			free(full_msg);
 			full_msg = 0;
@@ -60,7 +61,7 @@ int	main(void)
 	sigemptyset(&sa.sa_mask);
 	sigaddset(&sa.sa_mask, SIGUSR1);
 	sigaddset(&sa.sa_mask, SIGUSR2);
-	sa.sa_flags = SA_SIGINFO;
+	sa.sa_flags = SA_SIGINFO | SA_NODEFER;
 	sa.sa_sigaction = ft_sighandler;
 	pid = getpid();
 	ft_printf("%d\n", pid);

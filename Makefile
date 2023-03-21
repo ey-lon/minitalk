@@ -19,11 +19,11 @@ LIBFT = Libft/libft.a
 SNAME = server
 CNAME = client
 
-SER =	server.c
-CLT =	client.c
+SER =	src/server.c
+CLT =	src/client.c
 
-SERBNS =	server_bonus.c
-CLTBNS =	client_bonus.c
+SERBNS =	src_bonus/server_bonus.c
+CLTBNS =	src_bonus/client_bonus.c
 
 FLAGS = -Wall -Werror -Wextra -g
 
