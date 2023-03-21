@@ -8,6 +8,8 @@ client.
 Unicode characters support!
 
 ## Usage
+| **command** | *info* |
+|-------------|--------|
 | `make` | to compile the *client* and the *server* (std. version). |
 | `make bonus` | to compile the *client* and the *server* (bonus version). |
 | `./server` | to execute the *server*. |
