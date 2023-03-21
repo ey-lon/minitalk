@@ -12,5 +12,12 @@ Unicode characters support!
 | ------- | ---- |
 | `make` | to compile the *client* and the *server* (std. version). |
 | `make bonus` | to compile the *client* and the *server* (bonus version). |
-| `./server` | to execute the *server*. |
-| `./client <server_pid> <message>` | to execute the *client* and send a message to the *server*. |
+
+To execute the *server*:
+```shell
+./server
+```
+To execute the *client* and send a message to the *server*:
+```shell
+./client <server_pid> <message>
+```
