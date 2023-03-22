@@ -10,8 +10,8 @@ Unicode characters support!
 ## Usage
 | command | info |
 | ------- | ---- |
-| `make` | to compile the *client* and the *server* (std. version). |
-| `make bonus` | to compile the *client* and the *server* (bonus version). |
+| `make` | compile the *client* and the *server* (std. version). |
+| `make bonus` | compile the *client* and the *server* (bonus version). |
 
 To execute the *server*:
 ```shell
