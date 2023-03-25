@@ -90,7 +90,7 @@ static char	*ft_rmline(char *buf_old)
 	}
 	buf_new = ft_calloc(ft_strlen(buf_old) - i + 1, sizeof(char));
 	j = 0;
-	while (buf_old[i] != '\0')
+	while (buf_old[i + j] != '\0')
 	{
 		buf_new[j] = buf_old[i + j];
 		j++;
