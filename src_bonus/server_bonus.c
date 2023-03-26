@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/24 10:25:08 by abettini          #+#    #+#             */
-/*   Updated: 2023/03/26 14:00:35 by marvin           ###   ########.fr       */
+/*   Updated: 2023/03/26 15:00:08 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,15 +43,14 @@ static int	ft_deal_msg(int signal, int pid)
 			full_msg = ft_free_join(full_msg, &msg);
 		else if (msg == '\0')
 		{
-			status = ft_printf("[Client_%d]:\n\"%s\"\n", pid, full_msg) * 0 + 1;
+			ft_printf("[Client_%d]:\n\"%s\"\n", pid, full_msg);
 			free(full_msg);
 			full_msg = NULL;
-			kill(pid, SIGUSR2);
+			status = 1;
 		}
 		i = 0;
 		msg = 0;
 	}
-	kill(pid, SIGUSR1);
 	return (status);
 }
 
@@ -68,7 +67,12 @@ static void	ft_sighandler(int signal, siginfo_t *info, void *ucontext)
 	else if (pid == info->si_pid)
 	{
 		if (ft_deal_msg(signal, pid))
+		{
+			kill(pid, SIGUSR2);
 			pid = 0;
+		}
+		else
+			kill(pid, SIGUSR1);
 	}
 }
 
