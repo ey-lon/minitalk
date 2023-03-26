@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   server.c                                           :+:      :+:    :+:   */
+/*   server_bonus.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abettini <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/24 10:25:08 by abettini          #+#    #+#             */
-/*   Updated: 2023/01/24 10:25:10 by abettini         ###   ########.fr       */
+/*   Updated: 2023/03/26 14:00:35 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,14 @@ static char	*ft_free_join(char *old_msg, char *new_char)
 	return (full_msg);
 }
 
-static void	ft_sighandler(int signal, siginfo_t *info, void *context)
+static int	ft_deal_msg(int signal, int pid)
 {
 	static char	*full_msg;
 	static char	msg;
 	static int	i;
+	int			status;
 
+	status = 0;
 	if (signal == SIGUSR2)
 		msg = msg | 1 << i;
 	i++;
@@ -41,16 +43,33 @@ static void	ft_sighandler(int signal, siginfo_t *info, void *context)
 			full_msg = ft_free_join(full_msg, &msg);
 		else if (msg == '\0')
 		{
-			kill(info->si_pid, SIGUSR1);
-			printf("%s\n", full_msg);
+			status = ft_printf("[Client_%d]:\n\"%s\"\n", pid, full_msg) * 0 + 1;
 			free(full_msg);
-			full_msg = 0;
+			full_msg = NULL;
+			kill(pid, SIGUSR2);
 		}
 		i = 0;
 		msg = 0;
 	}
-	kill(info->si_pid, SIGUSR2);
-	(void)context;
+	kill(pid, SIGUSR1);
+	return (status);
+}
+
+static void	ft_sighandler(int signal, siginfo_t *info, void *ucontext)
+{
+	static int	pid;
+
+	(void)ucontext;
+	if (!pid)
+	{
+		pid = info->si_pid;
+		kill(pid, SIGUSR1);
+	}
+	else if (pid == info->si_pid)
+	{
+		if (ft_deal_msg(signal, pid))
+			pid = 0;
+	}
 }
 
 int	main(void)
@@ -64,7 +83,7 @@ int	main(void)
 	sa.sa_flags = SA_SIGINFO | SA_NODEFER;
 	sa.sa_sigaction = ft_sighandler;
 	pid = getpid();
-	ft_printf("%d\n", pid);
+	ft_printf("Server_PID = [%d]\n", pid);
 	sigaction(SIGUSR1, &sa, NULL);
 	sigaction(SIGUSR2, &sa, NULL);
 	while (1)

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   client.c                                           :+:      :+:    :+:   */
+/*   client_bonus.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abettini <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/24 10:25:00 by abettini          #+#    #+#             */
-/*   Updated: 2023/01/24 10:25:02 by abettini         ###   ########.fr       */
+/*   Updated: 2023/03/26 14:11:09 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,14 +17,14 @@
 
 int	g_check = 0;
 
-static void	ft_msgstat(int signal)
+static void	ft_msg_stat(int signal)
 {
-	g_check = 0;
-	if (signal == SIGUSR1)
+	if (signal == SIGUSR2)
 	{
-		write(1, "Message Sent!\n", 14);
+		write(1, "\rMessage Sent!\n", 15);
 		exit(0);
 	}
+	g_check = 1;
 }
 
 static void	ft_conv(char c, int pid)
@@ -35,9 +35,9 @@ static void	ft_conv(char c, int pid)
 	i = 0;
 	while (i < 8)
 	{
-		while (g_check)
+		while (!g_check)
 			usleep(0);
-		g_check = 1;
+		g_check = 0;
 		if (c & 1 << i)
 			check = kill(pid, SIGUSR2);
 		else
@@ -48,7 +48,7 @@ static void	ft_conv(char c, int pid)
 	}
 }
 
-static void	ft_sendmsg(char *str, int pid)
+static void	ft_send_msg(char *str, int pid)
 {
 	int	i;
 
@@ -61,18 +61,33 @@ static void	ft_sendmsg(char *str, int pid)
 	ft_conv('\0', pid);
 }
 
+static void	ft_establish_connection(int pid)
+{
+	while (!g_check)
+	{
+		if (kill(pid, SIGUSR1) == -1)
+			exit(0);
+		else if (!g_check)
+		{
+			write(1, "\rSending...", 11);
+			sleep(1);
+		}
+	}
+}
+
 int	main(int argc, char **argv)
 {
 	int	s_pid;
 
-	signal(SIGUSR1, ft_msgstat);
-	signal(SIGUSR2, ft_msgstat);
+	signal(SIGUSR1, ft_msg_stat);
+	signal(SIGUSR2, ft_msg_stat);
 	if (argc == 3 && argv[2][0])
 	{
 		s_pid = ft_atoi(argv[1]);
 		if (s_pid > 0)
 		{
-			ft_sendmsg(argv[2], s_pid);
+			ft_establish_connection(s_pid);
+			ft_send_msg(argv[2], s_pid);
 			while (1)
 				pause();
 		}
