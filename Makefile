@@ -53,7 +53,7 @@ libfclean:
 		@make fclean -C Libft
 
 fclean:   	libfclean
-		if [ -f $(SNAME) ] || [ - f $(CNAME) ]; then\
+		if [ -f $(SNAME) ] || [ -f $(CNAME) ]; then\
 			rm -rf $(SNAME);\
 			rm -rf $(CNAME);\
 			echo "$(TCOL)$(SNAME) and $(CNAME) $(RMD)";\
