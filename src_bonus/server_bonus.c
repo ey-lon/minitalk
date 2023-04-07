@@ -29,19 +29,19 @@ static char	*ft_free_join(char *old_msg, char *new_char)
 static int	ft_deal_msg(int signal, int pid)
 {
 	static char	*full_msg;
-	static char	msg;
+	static char	msg[2];
 	static int	i;
 	int			status;
 
 	status = 0;
 	if (signal == SIGUSR2)
-		msg = msg | 1 << i;
+		msg[0] = msg[0] | 1 << i;
 	i++;
 	if (i >= 8)
 	{
-		if (msg)
-			full_msg = ft_free_join(full_msg, &msg);
-		else if (msg == '\0')
+		if (msg[0])
+			full_msg = ft_free_join(full_msg, msg);
+		else if (msg[0] == '\0')
 		{
 			ft_printf("[Client_%d]:\n\"%s\"\n", pid, full_msg);
 			free(full_msg);
@@ -49,7 +49,7 @@ static int	ft_deal_msg(int signal, int pid)
 			status = 1;
 		}
 		i = 0;
-		msg = 0;
+		msg[0] = 0;
 	}
 	return (status);
 }
