@@ -66,7 +66,7 @@ int	main(int argc, char **argv)
 	if (argc == 3 && argv[2][0])
 	{
 		s_pid = ft_atoi(argv[1]);
-		if (s_pid)
+		if (s_pid > 0)
 			ft_sendmsg(argv[2], s_pid);
 	}
 	return (0);
