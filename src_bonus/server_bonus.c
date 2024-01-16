@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   server_bonus.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abettini <abettini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/24 10:25:08 by abettini          #+#    #+#             */
-/*   Updated: 2023/03/26 15:00:08 by marvin           ###   ########.fr       */
+/*   Updated: 2024/01/16 15:31:16 by abettini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,16 @@
 #include <sys/types.h>
 #include "../Libft/libft.h"
 
-static char	*ft_free_join(char *old_msg, char *new_char)
+static char	*ft_free_join(char *old_msg, char chr)
 {
 	char	*full_msg;
+	char	str[2];
 
+	str[1] = '\0';
+	str[0] = chr;
 	if (!old_msg)
 		old_msg = ft_calloc(1, 1);
-	full_msg = ft_strjoin(old_msg, new_char);
+	full_msg = ft_strjoin(old_msg, str);
 	free(old_msg);
 	return (full_msg);
 }
@@ -29,19 +32,19 @@ static char	*ft_free_join(char *old_msg, char *new_char)
 static int	ft_deal_msg(int signal, int pid)
 {
 	static char	*full_msg;
-	static char	msg[2];
+	static char	chr;
 	static int	i;
 	int			status;
 
 	status = 0;
 	if (signal == SIGUSR2)
-		msg[0] = msg[0] | 1 << i;
+		chr = chr | 1 << i;
 	i++;
 	if (i >= 8)
 	{
-		if (msg[0])
-			full_msg = ft_free_join(full_msg, msg);
-		else if (msg[0] == '\0')
+		if (chr)
+			full_msg = ft_free_join(full_msg, chr);
+		else
 		{
 			ft_printf("[Client_%d]:\n\"%s\"\n", pid, full_msg);
 			free(full_msg);
@@ -49,7 +52,7 @@ static int	ft_deal_msg(int signal, int pid)
 			status = 1;
 		}
 		i = 0;
-		msg[0] = 0;
+		chr = 0;
 	}
 	return (status);
 }
@@ -72,7 +75,9 @@ static void	ft_sighandler(int signal, siginfo_t *info, void *ucontext)
 			pid = 0;
 		}
 		else
+		{
 			kill(pid, SIGUSR1);
+		}
 	}
 }
 

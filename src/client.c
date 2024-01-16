@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   client.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abettini <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: abettini <abettini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/24 10:25:00 by abettini          #+#    #+#             */
-/*   Updated: 2023/01/24 10:25:02 by abettini         ###   ########.fr       */
+/*   Updated: 2024/01/16 15:12:56 by abettini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,10 @@ static void	ft_msgstat(int signal)
 	(void)signal;
 }
 
-static void	ft_conv(char c, int pid)
+static void	ft_sendchr(char c, int pid)
 {
 	int	i;
-	int	check;
+	int	signal;
 
 	i = 0;
 	while (i < 8)
@@ -35,10 +35,10 @@ static void	ft_conv(char c, int pid)
 			usleep(0);
 		g_check = 1;
 		if (c & 1 << i)
-			check = kill(pid, SIGUSR2);
+			signal = SIGUSR2;
 		else
-			check = kill(pid, SIGUSR1);
-		if (check == -1)
+			signal = SIGUSR1;
+		if (kill(pid, signal) == -1)
 			exit(0);
 		i++;
 	}
@@ -51,23 +51,25 @@ static void	ft_sendmsg(char *str, int pid)
 	i = 0;
 	while (str[i])
 	{
-		ft_conv(str[i], pid);
+		ft_sendchr(str[i], pid);
 		i++;
 	}
-	ft_conv('\0', pid);
+	ft_sendchr('\0', pid);
 }
 
 int	main(int argc, char **argv)
 {
-	int	s_pid;
+	int	server_pid;
 
-	signal(SIGUSR1, ft_msgstat);
-	signal(SIGUSR2, ft_msgstat);
 	if (argc == 3 && argv[2][0])
 	{
-		s_pid = ft_atoi(argv[1]);
-		if (s_pid > 0)
-			ft_sendmsg(argv[2], s_pid);
+		signal(SIGUSR1, ft_msgstat);
+		signal(SIGUSR2, ft_msgstat);
+		server_pid = ft_atoi(argv[1]);
+		if (server_pid > 0)
+		{
+			ft_sendmsg(argv[2], server_pid);
+		}
 	}
 	return (0);
 }
