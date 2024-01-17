@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: marvin <marvin@student.42.fr>              +#+  +:+       +#+         #
+#    By: abettini <abettini@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/10/07 14:36:43 by abettini          #+#    #+#              #
-#    Updated: 2023/03/11 18:16:38 by marvin           ###   ########.fr        #
+#    Updated: 2024/01/17 11:58:20 by abettini         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,12 +17,12 @@ GREEN = \e[1;92m
 RED = \e[1;31m
 CYAN = \e[1;36m
 TCOL = $(CYAN)
-RMD = $(GREEN) successfully $(RED)removed$(NOCOL)
-CMP = $(GREEN) successfully compiled$(NOCOL)
 
 #----------------------------------------------
 
 CC = cc
+
+RM = rm -rf
 
 NAME = libft.a
 
@@ -92,33 +92,25 @@ all: $(NAME)
 
 $(NAME): $(OBJ_S)
 	ar -rcs $@ $^
-	echo "$(TCOL)$(NAME)$(CMP)"
+	echo "$(TCOL)make ($(NAME))$(NOCOL)"
 
 %.o:%.c
 	$(CC) -c $(CFLAG) -I. $< -o $@
 
 clean:
-	if [ `find . -name "*.o" | wc -l` != 0 ]; then\
-		/bin/rm -f part_1/*.o;\
-		/bin/rm -f part_2/*.o;\
-		/bin/rm -f bonus/*.o;\
-		/bin/rm -f ft_printf/*.o;\
-		/bin/rm -f get_next_line/*.o;\
-		echo "$(TCOL)object files ($(NAME))$(RMD)";\
-	fi
-	
+	$(RM) $(OBJ_S)
+	$(RM) $(OBJ_B)
+	echo "$(TCOL)make clean ($(NAME))$(NOCOL)"	
 
 fclean: clean
-	if [ -f $(NAME) ]; then\
-		/bin/rm -f $(NAME);\
-		echo "$(TCOL)$(NAME)$(RMD)";\
-	fi
-
-re: fclean all
+	$(RM) $(NAME)
+	echo "$(TCOL)make fclean ($(NAME))$(NOCOL)"	
 
 bonus: $(OBJ_B)
 	ar -rcs $(NAME) $^
-	echo "$(TCOL)$(NAME) w/ bonus$(CMP)"
+	echo "$(TCOL)make bonus ($(NAME))$(NOCOL)"
+
+re: fclean all
 
 .PHONY: all clean fclean re bonus
 

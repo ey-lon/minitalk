@@ -5,8 +5,6 @@ GREEN = \e[1;92m
 RED = \e[1;31m
 CYAN = \e[1;36m
 TCOL = $(CYAN)
-RMD = $(GREEN)successfully $(RED)removed$(NOCOL)
-CMP = $(GREEN)successfully compiled$(NOCOL)
 
 #----------------------------------------------
 
@@ -55,43 +53,39 @@ CLTBNS_O = $(CLTBNS:.c=.o)
 
 all: $(NAME)
 
-$(NAME): comp
-
 libcomp:
 		@make -C Libft
+
+libclean:
+		@make clean -C Libft
+
+libfclean:
+		@make fclean -C Libft
 	
-comp: libcomp $(SER_O) $(CLT_O)
+$(NAME): libcomp $(SER_O) $(CLT_O)
 	$(CC) $(FLAGS) $(SER_O) $(LIBFT) -o $(SNAME)
 	$(CC) $(FLAGS) $(CLT_O) $(LIBFT) -o $(CNAME)
-	echo "$(TCOL)$(SNAME) and $(CNAME) $(CMP)"
+	echo "$(TCOL)make ($(NAME))$(NOCOL)"
 	
 bonus: libcomp $(SERBNS_O) $(CLTBNS_O)
 	$(CC) $(FLAGS) $(SERBNS_O) $(LIBFT) -o $(SNAME)
 	$(CC) $(FLAGS) $(CLTBNS_O) $(LIBFT) -o $(CNAME)
-	echo "$(TCOL)$(SNAME) and $(CNAME) (bonus version) $(CMP)"
-   
-libclean:
-		@make clean -C Libft
+	echo "$(TCOL)make bonus $(NAME)$(NOCOL)"
 		
 clean:		libclean
 	$(RM) $(SER_O)
 	$(RM) $(CLT_O)
 	$(RM) $(SERBNS_O)
 	$(RM) $(CLTBNS_O)
-	echo "$(TCOL)object files $(RMD)"
-
-libfclean:
-		@make fclean -C Libft
+	echo "$(TCOL)make clean ($(NAME))$(NOCOL)"
 
 fclean:   	libfclean clean
-		if [ -f $(SNAME) ] || [ -f $(CNAME) ]; then\
-			$(RM) $(SNAME);\
-			$(RM) $(CNAME);\
-			echo "$(TCOL)$(SNAME) and $(CNAME) $(RMD)";\
-		fi
-		
+	$(RM) $(SNAME)
+	$(RM) $(CNAME)
+	echo "$(TCOL)make fclean ($(NAME))$(NOCOL)"
+
 re: fclean all
 
-.PHONY: all re clean fclean bonus
+.PHONY: all re clean fclean bonus libcomp libclean libfclean
 
 .SILENT:
