@@ -12,6 +12,8 @@ Unicode characters support!
 | ------- | ---- |
 | `make` | compile the *client* and the *server* (std. version). |
 | `make bonus` | compile the *client* and the *server* (bonus version). |
+| `make clean` | remove temporary files. |
+| `make fclean` | remove temporary and executables. |
 
 To execute the *server*:
 ```shell
